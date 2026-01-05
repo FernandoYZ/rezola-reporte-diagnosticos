@@ -1,0 +1,12 @@
+{
+  "name": "reporte-diagnosticos",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "hono": "^4.11.3",
+    "@hono/node-server": "^1.19.6"
+  }
+}
