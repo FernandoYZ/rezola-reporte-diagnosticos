@@ -72,26 +72,6 @@ export function reportesApp(periodoInicial) {
       this.sidebarOpen = false;
     },
 
-    // Computed property para preview visual del período en el header
-    get dateLabel() {
-      const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
-      if (this.mode === 'mes') {
-        return `${meses[this.mes]} ${this.año}`;
-      }
-      if (this.mode === 'trimestre') {
-        return `Trimestre ${['I', 'II', 'III', 'IV'][parseInt(this.trimestre)]} - ${this.año}`;
-      }
-      if (this.mode === 'semestre') {
-        return `Semestre ${['I', 'II'][parseInt(this.semestre)]} - ${this.año}`;
-      }
-      if (this.mode === 'año') {
-        return `Año ${this.año}`;
-      }
-      return `${this.fechaInicio} - ${this.fechaFin}`;
-    },
-
     // Exportar datos a Excel
     exportarExcel() {
       const params = new URLSearchParams({ mode: this.mode });
