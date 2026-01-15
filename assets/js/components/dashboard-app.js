@@ -55,9 +55,8 @@ export function dashboardApp(periodoInicial) {
 
     // Generar reporte usando HTMX con parámetros correctos
     generarReporte() {
-      // Obtener código del input hidden
-      const codigoInput = document.querySelector('input[name="Codigo"]');
-      const codigo = codigoInput ? codigoInput.value : '';
+      // Obtener código del estado global
+      const codigo = window.reporteState.codigoDiagnostico;
 
       if (!codigo || codigo.trim() === '') {
         alert('Por favor selecciona un diagnóstico antes de generar el reporte');
@@ -80,27 +79,6 @@ export function dashboardApp(periodoInicial) {
 
       // Cerrar sidebar en móvil
       this.sidebarOpen = false;
-    },
-
-    // Computed property para preview visual del período en el header
-    // Esta es lógica UI pura, no afecta el cálculo real de fechas del servidor
-    get dateLabel() {
-      const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
-      if (this.mode === 'mes') {
-        return `${meses[this.mes]} ${this.año}`;
-      }
-      if (this.mode === 'trimestre') {
-        return `Trimestre ${['I', 'II', 'III', 'IV'][parseInt(this.trimestre)]} - ${this.año}`;
-      }
-      if (this.mode === 'semestre') {
-        return `Semestre ${['I', 'II'][parseInt(this.semestre)]} - ${this.año}`;
-      }
-      if (this.mode === 'año') {
-        return `Año ${this.año}`;
-      }
-      return `${this.fechaInicio} - ${this.fechaFin}`;
     },
 
     // Exportar datos a Excel
