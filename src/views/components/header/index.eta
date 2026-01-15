@@ -29,26 +29,28 @@
     </div>
 
     <div class="w-full lg:w-auto flex flex-col sm:flex-row gap-3">
-      <div class="text-sm font-bold bg-white text-slate-700 pl-3 pr-5 py-2.5 rounded-2xl border border-slate-200/80 items-center shadow-xs flex gap-4">
+      <div id="period-display" class="text-sm font-bold bg-white text-slate-700 pl-3 pr-5 py-2.5 rounded-2xl border border-slate-200/80 items-center shadow-xs flex gap-4">
         <div class="size-10 rounded-xl border border-slate-200 flex items-center justify-center shrink-0">
           <%~ icon('calendario_check', { class: 'w-5 h-5 text-blue-600' }) %>
         </div>
         <div>
           <h4 class="text-slate-400 text-[8.5px] uppercase tracking-wider">Periodo de Análisis</h4>
-          <span x-text="dateLabel" class="font-semibold text-xs lg:text-sm"></span>
+          <span class="font-semibold text-xs lg:text-sm"><%= it.dateLabel || 'Seleccione Periodo' %></span>
         </div>
       </div>
 
-      <!-- Botón Exportar a Excel -->
-      <button
-        type="button"
-        @click="exportarExcel()"
-        class="bg-gradient-to-r from-green-400 to-emerald-600 hover:from-green-500 hover:to-emerald-700 text-white font-semibold rounded-2xl shadow-xs px-3 -py-2 flex items-center justify-center gap-2 transition-colors cursor-pointer"
-        title="Exportar tablas a Excel"
-      >
-        <%~ icon('descargar', { class: 'w-4 h-4' }) %>
-        <span class="text-xs lg:text-sm">Exportar Excel</span>
-      </button>
+      <!-- Botón Exportar a Excel (condicional) -->
+      <% if (it.showExportButton) { %>
+        <button
+          type="button"
+          @click="exportarExcel()"
+          class="bg-gradient-to-r from-green-400 to-emerald-600 hover:from-green-500 hover:to-emerald-700 text-white font-semibold rounded-2xl shadow-xs px-3 -py-2 flex items-center justify-center gap-2 transition-colors cursor-pointer"
+          title="Exportar tablas a Excel"
+        >
+          <%~ icon('descargar', { class: 'w-4 h-4' }) %>
+          <span class="text-xs lg:text-sm">Exportar Excel</span>
+        </button>
+      <% } %>
     </div>
   </div>
 </header>

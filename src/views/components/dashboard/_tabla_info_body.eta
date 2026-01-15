@@ -8,6 +8,7 @@
         <th class="text-left p-2 font-semibold text-slate-600">Fecha</th>
         <th class="text-left p-2 font-semibold text-slate-600">Paciente</th>
         <th class="text-left p-2 font-semibold text-slate-600">Edad</th>
+        <th class="text-left p-2 font-semibold text-slate-600">TipoEdad</th>
         <th class="text-left p-2 font-semibold text-slate-600">Documento</th>
         <th class="text-left p-2 font-semibold text-slate-600">Domicilio</th>
         <th class="text-left p-2 font-semibold text-slate-600">Distrito</th>
@@ -23,6 +24,7 @@
           <td class="p-2 text-slate-600 whitespace-nowrap"><%= row.FechaFormateada || '-' %></td>
           <td class="p-2 font-semibold text-slate-800"><%= row.paciente %></td>
           <td class="p-2 text-slate-600"><%= row.Edad %></td>
+          <td class="p-2 text-slate-600"><%= row.TipoEdad %></td>
           <td class="p-2 text-slate-600"><%= row.NroDocumento || '-' %></td>
           <td class="p-2 text-slate-600"><%= row.domicilio || '-' %></td>
           <td class="p-2 text-slate-600"><%= row.distrito || '-' %></td>

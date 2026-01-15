@@ -41,7 +41,7 @@
         <div class="p-4 lg:p-8">
     
           <!-- Header de la página -->
-          <%~ include('../components/header/index.eta', it) %>
+          <%~ include('../components/header/index.eta', { ...it, showExportButton: true }) %>
     
           <!-- Filtros -->
           <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200/80 my-6">
@@ -75,13 +75,8 @@
                hx-get="/api/datos-tablas?<%= new URLSearchParams({ fechaInicio: it.periodoInicial.fechaInicio, fechaFin: it.periodoInicial.fechaFin }).toString() %>" 
                hx-trigger="load" 
                hx-indicator="#btn-cargar .htmx-indicator">
-            <!-- Las tablas se cargarán aquí desde el servidor -->
-            <div class="flex items-center justify-center h-96 text-slate-400">
-              <div class="text-center">
-                <%~ icon('refresh_cw', { class: 'w-8 h-8 animate-spin mx-auto mb-4' }) %>
-                <p class="text-sm">Cargando reportes...</p>
-              </div>
-            </div>
+            <!-- Usar el componente de esqueleto para el estado de carga inicial -->
+            <%~ include('../components/skeletons/tablas_reporte.eta') %>
           </div>
     
         </div>

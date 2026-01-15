@@ -31,7 +31,7 @@
     <div class="p-4 pt-20 lg:pt-8 lg:p-8">
 
       <!-- Header de la página -->
-      <%~ include('../components/header/index.eta', it) %>
+      <%~ include('../components/header/index.eta', { ...it, showExportButton: false }) %>
 
       <!-- Contenedor para contenido dinámico -->
       <div id="dashboard-content">
