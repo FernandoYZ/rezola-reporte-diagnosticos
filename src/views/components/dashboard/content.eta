@@ -1,0 +1,156 @@
+<!-- KPIs Principales -->
+<div id="summary-cards">
+  <%~ include('../kpi/kpi_nuevo', { kpi: it.datos.kpi }, 'empty') %>
+</div>
+
+<!-- Gráficos Principales -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
+
+  <!-- Tendencia (2 cols) -->
+  <div class="card lg:col-span-2 p-5 h-[450px]">
+    <div class="chart-header">
+      <h3 class="chart-title">Tendencia Evolutiva</h3>
+      <p class="chart-subtitle">Evolución de atenciones en el período seleccionado</p>
+    </div>
+    <div class="chart-container">
+      <div id="chartTendencia"></div>
+    </div>
+  </div>
+
+  <!-- Tabla de Diagnósticos Relacionados -->
+  <div class="card p-5 h-[450px]">
+    <div class="chart-header">
+      <h3 class="chart-title">Diagnósticos Relacionados</h3>
+      <p class="chart-subtitle">Códigos CIE-10 incluidos en este reporte</p>
+    </div>
+    <div class="overflow-auto flex-1">
+      <table class="w-full text-xs">
+        <thead class="bg-slate-50 sticky top-0">
+          <tr>
+            <th class="text-left p-2 font-semibold text-slate-600">Código</th>
+            <th class="text-left p-2 font-semibold text-slate-600">Descripción</th>
+            <th class="text-left p-2 font-semibold text-slate-600">Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% it.datos.tablaDiagnosticos.forEach(function(diag) { %>
+            <tr class="border-t border-slate-100 hover:bg-slate-50">
+              <td class="p-2 font-bold text-blue-600"><%= diag.CodigoDiagnostico %></td>
+              <td class="p-2 text-slate-700"><%= diag.Diagnostico %></td>
+              <td class="p-2 text-slate-700"><%= diag.Cantidad %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Segunda Fila: Financiamiento y Demografía -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+
+  <!-- Tipo de Financiamiento -->
+  <div class="card p-5 h-[380px]">
+    <div class="chart-header">
+      <h3 class="chart-title">Tipo de Financiamiento</h3>
+      <p class="chart-subtitle">Distribución por fuente de cobertura</p>
+    </div>
+    <div class="chart-container">
+      <div id="chartFinanciamiento"></div>
+    </div>
+  </div>
+
+  <!-- Pirámide Poblacional -->
+  <div class="card p-5 h-[380px]">
+    <div class="chart-header">
+      <h3 class="chart-title">Pirámide Poblacional</h3>
+      <p class="chart-subtitle">Distribución por grupo etario y sexo</p>
+    </div>
+    <div class="chart-container">
+      <div id="chartPiramide"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Tercera Fila -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+
+  <!-- Clasificación Diagnóstica -->
+  <div class="card p-6 h-[380px]">
+    <div class="chart-header">
+      <h3 class="chart-title">Clasificación Diagnóstica</h3>
+      <p class="chart-subtitle">Nivel de certeza clínica</p>
+    </div>
+    <div class="chart-container">
+      <div id="chartClasificacion"></div>
+    </div>
+  </div>
+
+  <!-- Condición del Paciente -->
+  <div class="card p-6 h-[380px]">
+    <div class="chart-header">
+      <h3 class="chart-title">Condición del Paciente</h3>
+      <p class="chart-subtitle">Estado de admisión (HIS)</p>
+    </div>
+    <div class="chart-container">
+      <div id="chartCondicion"></div>
+    </div>
+  </div>
+
+  <!-- Ranking de Distritos -->
+  <div class="card p-6 h-[380px]">
+    <div class="chart-header mb-4">
+      <h3 class="chart-title">Ranking de Incidencia</h3>
+      <p class="chart-subtitle">Top 5 distritos con mayor carga</p>
+    </div>
+    <div class="overflow-auto flex-1">
+      <table class="w-full text-xs">
+        <thead class="bg-slate-50 sticky top-0">
+          <tr>
+            <th class="text-left p-2 font-semibold text-slate-600">#</th>
+            <th class="text-left p-2 font-semibold text-slate-600">Distrito</th>
+            <th class="text-right p-2 font-semibold text-slate-600">Casos</th>
+            <th class="text-right p-2 font-semibold text-slate-600">%</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% it.datos.tablaIncidenciasProvincias.forEach(function(dist, index) { %>
+            <tr class="border-t border-slate-100 hover:bg-slate-50">
+              <td class="p-2">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded text-xs font-bold <%= index < 3 ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600' %>">
+                  <%= index + 1 %>
+                </span>
+              </td>
+              <td class="p-2 font-semibold text-slate-700"><%= dist.NombreDistrito %></td>
+              <td class="p-2 text-right font-bold text-slate-900"><%= dist.CantidadAtenciones %></td>
+              <td class="p-2 text-right text-slate-600"><%= dist.PorcentajeCorrespondiente %>%</td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Script para renderizar gráficos con ApexCharts -->
+<script>
+  (function() {
+    // Datos del servidor
+    const datos = <%~ JSON.stringify(it.datos) %>;
+
+    // Renderizar todos los gráficos (funciones expuestas desde main.js)
+    // Gráfico de tendencia con comparación de período anterior (si aplica)
+    window.renderTendenciaChart(
+      'chartTendencia',
+      datos.graficoTendenciaAtenciones,
+      datos.graficoTendenciaAnterior
+    );
+
+    window.renderFinanciamientoChart('chartFinanciamiento', datos.graficoTipoFinanciamiento);
+    window.renderPiramideChart('chartPiramide', datos.graficoPiramidePacientes);
+    window.renderClasificacionChart('chartClasificacion', datos.graficoClasificacionDiagnostico);
+    window.renderCondicionChart('chartCondicion', datos.graficoCondicionPaciente);
+  })();
+</script>

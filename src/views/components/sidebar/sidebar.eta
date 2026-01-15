@@ -1,0 +1,175 @@
+<aside
+    class="w-80 bg-white border-r border-slate-200 flex flex-col h-full shrink-0 shadow-xl lg:shadow-sm"
+    :class="{ 'open': sidebarOpen }"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="transform -translate-x-full"
+    x-transition:enter-end="transform translate-x-0"
+    x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="transform translate-x-0"
+    x-transition:leave-end="transform -translate-x-full"
+>
+
+    <!-- Header Sidebar -->
+    <div class="px-4 py-3 border-b border-slate-100">
+      <div class="flex items-center gap-3">
+        <div class="size-11 rounded-2xl border border-blue-300 bg-gradient-to-br from-slate-50 to-white flex items-center justify-center shadow-md shadow-blue-200">
+          <img src="/logo.webp" alt="Logo" class="w-7 h-7">
+        </div>
+        <div>
+          <h1 class="font-bold text-lg text-slate-900">SIHCE</h1>
+          <p class="text-[10px] -mt-0.5 text-blue-600 font-bold uppercase tracking-wide">Hospital Regional Rezola Cañete</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulario Principal -->
+    <form id="filtros-form" class="flex-1 overflow-y-auto p-6 space-y-6 flex flex-col">
+
+        <!-- Diagnóstico con autocomplete -->
+        <div class="space-y-2" x-data="autocomplete()">
+            <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Diagnóstico Base</label>
+            <div class="relative group">
+                <%~ icon('buscar', { class: 'absolute left-3 top-3 text-slate-400 w-4 h-4 group-focus-within:text-blue-500 transition-colors' }) %>
+                <input type="hidden" name="Codigo" x-model="query" required>
+                <input
+                    type="search"
+                    x-model="query"
+                    @input.debounce.300ms="buscar()"
+                    @focus="showResults = true"
+                    @keydown.arrow-down.prevent="navigateDown()"
+                    @keydown.arrow-up.prevent="navigateUp()"
+                    @keydown.enter.prevent="selectCurrent()"
+                    @keydown.escape="showResults = false"
+                    placeholder="Buscar por código CIE-10..."
+                    autocomplete="off"
+                    class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                >
+
+                <!-- Resultados del autocomplete -->
+                <div
+                    x-show="showResults && resultados.length > 0"
+                    @click.outside="showResults = false"
+                    class="absolute z-50 mt-1 w-full bg-white border border-slate-300 rounded-lg shadow-lg max-h-64 overflow-y-auto"
+                >
+                    <template x-for="(item, index) in resultados" :key="item.CodigoDiagnostico">
+                        <div
+                            @click="seleccionar(item)"
+                            :class="{'bg-blue-50': index === selectedIndex}"
+                            class="px-4 py-2 hover:bg-blue-50 cursor-pointer transition-colors"
+                        >
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-blue-600" x-text="item.CodigoDiagnostico"></span>
+                                <span class="text-xs text-gray-700" x-text="item.Diagnostico"></span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- Periodo de Análisis -->
+        <div class="space-y-3 flex-1">
+            <div class="flex justify-between items-center">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Periodo de Análisis</label>
+                <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full" x-text="mode.toUpperCase()"></span>
+            </div>
+
+            <!-- Campo oculto para el modo -->
+            <input type="hidden" name="mode" x-model="mode">
+
+            <!-- Botones de Modo -->
+            <div class="grid grid-cols-3 gap-2">
+                <button type="button" class="period-btn" :class="{ 'active': mode === 'mes' }" @click="mode = 'mes'">Mes</button>
+                <button type="button" class="period-btn" :class="{ 'active': mode === 'trimestre' }" @click="mode = 'trimestre'">Trimestre</button>
+                <button type="button" class="period-btn" :class="{ 'active': mode === 'semestre' }" @click="mode = 'semestre'">Semestre</button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <button type="button" class="period-btn" :class="{ 'active': mode === 'año' }" @click="mode = 'año'">Año</button>
+                <button type="button" class="period-btn" :class="{ 'active': mode === 'custom' }" @click="mode = 'custom'">
+                    <%~ icon('calendario_rango', { class: 'w-3.5 h-3.5' }) %>
+                </button>
+            </div>
+
+            <!-- Controles Dinámicos -->
+            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3">
+
+                <!-- Año -->
+                <div x-show="mode !== 'custom'" x-cloak>
+                    <label class="text-xs font-semibold text-slate-600 mb-2 block">Año Fiscal</label>
+                    <select name="año" x-model="año" class="w-full custom-select bg-white border border-slate-300 text-sm font-medium text-slate-700 rounded-lg py-2.5 pl-3 pr-10 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                    </select>
+                </div>
+
+                <!-- Mes -->
+                <div x-show="mode === 'mes'" x-cloak>
+                    <label class="text-xs font-semibold text-slate-600 mb-2 block">Mes del Año</label>
+                    <select name="mes" x-model="mes" class="w-full custom-select bg-white border border-slate-300 text-sm font-medium text-slate-700 rounded-lg py-2.5 pl-3 pr-10 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                        <option value="0">Enero</option>
+                        <option value="1">Febrero</option>
+                        <option value="2">Marzo</option>
+                        <option value="3">Abril</option>
+                        <option value="4">Mayo</option>
+                        <option value="5">Junio</option>
+                        <option value="6">Julio</option>
+                        <option value="7">Agosto</option>
+                        <option value="8">Septiembre</option>
+                        <option value="9">Octubre</option>
+                        <option value="10">Noviembre</option>
+                        <option value="11">Diciembre</option>
+                    </select>
+                </div>
+
+                <!-- Trimestre -->
+                <div x-show="mode === 'trimestre'" x-cloak>
+                    <label class="text-xs font-semibold text-slate-600 mb-2 block">Trimestre</label>
+                    <select name="trimestre" x-model="trimestre" class="w-full custom-select bg-white border border-slate-300 text-sm font-medium text-slate-700 rounded-lg py-2.5 pl-3 pr-10 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                        <option value="0">Trimestre I (Ene-Mar)</option>
+                        <option value="1">Trimestre II (Abr-Jun)</option>
+                        <option value="2">Trimestre III (Jul-Sep)</option>
+                        <option value="3">Trimestre IV (Oct-Dic)</option>
+                    </select>
+                </div>
+
+                <!-- Semestre -->
+                <div x-show="mode === 'semestre'" x-cloak>
+                    <label class="text-xs font-semibold text-slate-600 mb-2 block">Semestre</label>
+                    <select name="semestre" x-model="semestre" class="w-full custom-select bg-white border border-slate-300 text-sm font-medium text-slate-700 rounded-lg py-2.5 pl-3 pr-10 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                        <option value="0">Semestre I (Ene-Jun)</option>
+                        <option value="1">Semestre II (Jul-Dic)</option>
+                    </select>
+                </div>
+
+                <!-- Rango Custom -->
+                <div x-show="mode === 'custom'" x-cloak class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 mb-2 block">Desde</label>
+                        <input type="date" name="fechaInicio" x-model="fechaInicio" class="w-full bg-white border border-slate-300 text-xs font-medium text-slate-700 rounded-lg py-2 px-3 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-slate-600 mb-2 block">Hasta</label>
+                        <input type="date" name="fechaFin" x-model="fechaFin" class="w-full bg-white border border-slate-300 text-xs font-medium text-slate-700 rounded-lg py-2 px-3 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Footer del Sidebar con Botón -->
+    <div class="p-6 border-t border-slate-200 bg-slate-50">
+        <button
+            type="button"
+            @click="generarReporte()"
+            class="cursor-pointer w-full bg-gradient-to-r from-blue-600 via-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:bg-slate-300 text-white font-semibold py-3.5 rounded-xl text-base flex justify-center items-center gap-2 shadow-md shadow-blue-200 transform active:scale-95 transition-all"
+        >
+            <span id="loading-indicator" class="htmx-indicator">
+                <%~ icon('refresh_cw', { class: 'w-4 h-4 animate-spin' }) %>
+            </span>
+            <span>Generar Reporte</span>
+        </button>
+    </div>
+</aside>

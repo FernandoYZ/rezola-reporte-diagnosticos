@@ -1,0 +1,121 @@
+<!-- Sección de Tablas Adicionales -->
+<div class="mt-8 mb-5">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-slate-800 mb-2">Información Detallada de Pacientes</h2>
+    <p class="text-slate-600">Listado completo de pacientes por categoría de diagnóstico</p>
+  </div>
+
+  <!-- Grid de las Tablas -->
+  <div class="grid grid-cols-1 gap-5">
+    
+    <!-- Tabla FEBRILES -->
+    <%~ include("./contenedor_tabla", {
+      iconName: "termometro",
+      title: "Cuadro de Febriles",
+      subtitle: "Pacientes con diagnósticos R50 – Fiebre",
+      count: it.datos.tablaFebres.length,
+      badgeClasses: "bg-cyan-500/10 text-cyan-700 border border-cyan-200/80",
+      searchKey: "searchFebriles",
+      tableId: "tabla-febriles-body",
+      loadingId: "loading-febriles",
+      data: it.datos.tablaFebres,
+      hoverColor: "red",
+      noDataMessage: "No hay registros de cuadros febriles en este período",
+      headers: ["CIE-10", "Diagnóstico", "Atención", "Fecha", "Paciente", "Edad", "Documento", "Domicilio", "Distrito", "Celular"],
+      columns: [
+        { key: "CodigoCIE10", classes: "font-mono text-blue-600" },
+        { key: "Descripcion", classes: "text-slate-700" },
+        { key: "IdAtencion" },
+        { key: "FechaFormateada", classes: "whitespace-nowrap" },
+        { key: "paciente", classes: "font-semibold text-slate-800" },
+        { key: "Edad" },
+        { key: "NroDocumento" },
+        { key: "domicilio" },
+        { key: "distrito" },
+        { key: "Celular" }
+      ]
+    }) %>
+
+    <!-- Tabla IRAS -->
+    <%~ include("./contenedor_tabla", {
+      iconName: "estetoscopio",
+      title: "Cuadro de IRAS",
+      subtitle: "Infecciones Respiratorias - Menores de 4 años",
+      count: it.datos.tablaIras.length,
+      badgeClasses: "bg-amber-500/10 text-amber-700 border border-amber-200/80",
+      searchKey: "searchIras",
+      tableId: "tabla-iras-body",
+      loadingId: "loading-iras",
+      data: it.datos.tablaIras,
+      hoverColor: "blue",
+      noDataMessage: "No hay registros de IRAS en este período",
+      headers: ["Diagnóstico", "Atención", "Paciente", "Edad", "Documento", "Domicilio", "Distrito", "Celular"],
+      columns: [
+        { key: "Descripcion", classes: "text-slate-700" },
+        { key: "IdAtencion" },
+        { key: "paciente", classes: "font-semibold text-slate-800" },
+        { key: "Edad" },
+        { key: "NroDocumento" },
+        { key: "domicilio" },
+        { key: "distrito" },
+        { key: "Celular" }
+      ]
+    }) %>
+
+    <!-- Tabla EDAS -->
+    <%~ include("./contenedor_tabla", {
+      iconName: "portapapeles_plus",
+      title: "Cuadro de EDAS",
+      subtitle: "Enfermedades Diarreicas Agudas",
+      count: it.datos.tablaEdas.length,
+      badgeClasses: "bg-amber-500/10 text-amber-700 border border-amber-200/80",
+      searchKey: "searchEdas",
+      tableId: "tabla-edas-body",
+      loadingId: "loading-edas",
+      data: it.datos.tablaEdas,
+      hoverColor: "amber",
+      noDataMessage: "No hay registros de EDAS en este período",
+      headers: ["CIE-10", "Diagnóstico", "Atención", "Paciente", "Edad", "Documento", "Domicilio", "Distrito", "Celular"],
+      columns: [
+        { key: "CodigoCIE10", classes: "font-mono text-blue-600" },
+        { key: "Descripcion", classes: "text-slate-700" },
+        { key: "IdAtencion" },
+        { key: "paciente", classes: "font-semibold text-slate-800" },
+        { key: "Edad" },
+        { key: "NroDocumento" },
+        { key: "domicilio" },
+        { key: "distrito" },
+        { key: "Celular" }
+      ]
+    }) %>
+
+    <!-- Tabla INFORMACIÓN PERSONAL -->
+    <%~ include("./contenedor_tabla", {
+      iconName: "portapapeles_check",
+      title: "Información Personal",
+      subtitle: "Diagnósticos específicos del sistema",
+      count: it.datos.tablaInformacionPersonal.length,
+      badgeClasses: "bg-green-500/10 text-green-700 border border-green-200/80",
+      searchKey: "searchInfoPersonal",
+      tableId: "tabla-info-body",
+      loadingId: "loading-info",
+      data: it.datos.tablaInformacionPersonal,
+      hoverColor: "green",
+      noDataMessage: "No hay registros en este período",
+      headers: ["CIE-10", "Diagnóstico", "Atención", "Fecha", "Paciente", "Edad", "Documento", "Domicilio", "Distrito", "Celular"],
+      columns: [
+        { key: "CodigoCIE10", classes: "font-mono text-blue-600" },
+        { key: "Descripcion", classes: "text-slate-700" },
+        { key: "IdAtencion" },
+        { key: "FechaFormateada", classes: "whitespace-nowrap" },
+        { key: "paciente", classes: "font-semibold text-slate-800" },
+        { key: "Edad" },
+        { key: "NroDocumento" },
+        { key: "domicilio" },
+        { key: "distrito" },
+        { key: "Celular" }
+      ]
+    }) %>
+
+  </div>
+</div>

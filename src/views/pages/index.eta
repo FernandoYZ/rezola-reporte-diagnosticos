@@ -1,0 +1,137 @@
+<div class="flex h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100" x-data="dashboardApp(<%= JSON.stringify(it.periodoInicial) %>)">
+
+  <!-- Botón Menú Mobile (z-50 para estar sobre todo) -->
+  <button
+    @click="toggleSidebar()"
+    class="lg:hidden fixed top-4 left-4 z-50 w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center text-slate-700 hover:bg-slate-50 transition-colors"
+  >
+    <%~ icon('menu', { class: 'w-5 h-5' }) %>
+  </button>
+
+  <!-- Overlay para cerrar sidebar en mobile (z-40, debajo del header y botón) -->
+  <div
+    x-show="sidebarOpen"
+    @click="sidebarOpen = false"
+    class="lg:hidden fixed inset-0 bg-black/30 z-40"
+    x-cloak
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+  ></div>
+
+  <!-- SIDEBAR -->
+  <%~ include('../components/sidebar/sidebar.eta', it) %>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-1 h-full overflow-y-auto bg-slate-50 relative z-10">
+    <!-- Padding responsive para el contenido -->
+    <div class="p-4 pt-20 lg:pt-8 lg:p-8">
+
+      <!-- Header de la página -->
+      <%~ include('../components/header/index.eta', it) %>
+
+      <!-- Contenedor para contenido dinámico -->
+      <div id="dashboard-content">
+        <!-- KPIs Principales -->
+        <div id="summary-cards">
+          <%~ include('../components/kpi/kpi_vacio.eta', it) %>
+        </div>
+
+        <!-- Gráficos Principales -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
+
+          <!-- Tendencia (2 cols) -->
+          <div class="card lg:col-span-2 p-5 h-[450px]">
+            <div class="chart-header">
+              <h3 class="chart-title">Tendencia Evolutiva</h3>
+              <p class="chart-subtitle">Evolución de atenciones en el período seleccionado</p>
+            </div>
+            <div class="flex items-center justify-center h-full text-gray-400">
+              <p class="text-sm">Selecciona un diagnóstico y presiona "Generar Reporte"</p>
+            </div>
+          </div>
+
+          <!-- Gráfico por Sexo -->
+          <div class="card p-5 h-[450px]">
+            <div class="chart-header">
+              <h3 class="chart-title">Diagnósticos Relacionados</h3>
+              <p class="chart-subtitle">Códigos CIE-10 incluidos en este reporte</p>
+            </div>
+            <div class="flex items-center justify-center h-full text-gray-400">
+              <p class="text-sm">Selecciona un diagnóstico y presiona "Generar Reporte"</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Segunda Fila -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+
+          <!-- Gráfico por Distritos -->
+          <div class="card p-5 h-[380px]">
+            <div class="chart-header">
+              <h3 class="chart-title">Tipo de Financiamiento</h3>
+              <p class="chart-subtitle">Distribución por fuente de cobertura</p>
+            </div>
+            <div class="flex items-center justify-center h-full text-gray-400">
+              <p class="text-sm">Selecciona un diagnóstico y presiona "Generar Reporte"</p>
+            </div>
+          </div>
+
+          <!-- Grafico de piramide -->
+          <div class="card p-5 h-[380px]">
+            <div class="chart-header">
+              <h3 class="chart-title">Pirámide Poblacional</h3>
+              <p class="chart-subtitle">Distribución por grupo etario y sexo</p>
+            </div>
+            <div class="flex items-center justify-center h-full text-gray-400">
+              <p class="text-sm">Selecciona un diagnóstico y presiona "Generar Reporte</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tercera Fila -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
+
+          <!-- Gráfico por Distritos -->
+          <div class="card p-5 h-[380px]">
+            <div class="chart-header">
+              <h3 class="chart-title">Clasificación Diagnóstica</h3>
+              <p class="chart-subtitle">Nivel de certeza clínica</p>
+            </div>
+            <div class="flex items-center justify-center h-full text-gray-400">
+              <p class="text-sm">Selecciona un diagnóstico y presiona "Generar Reporte"</p>
+            </div>
+          </div>
+
+          <!-- Grafico de piramide -->
+          <div class="card p-5 h-[380px]">
+            <div class="chart-header">
+              <h3 class="chart-title">Condición del Paciente</h3>
+              <p class="chart-subtitle">Estado de admisión (HIS)</p>
+            </div>
+            <div class="flex items-center justify-center h-full text-gray-400">
+              <p class="text-sm">Selecciona un diagnóstico y presiona "Generar Reporte</p>
+            </div>
+          </div>
+
+          <!-- Grafico de piramide -->
+          <div class="card p-5 h-[380px]">
+            <div class="chart-header">
+              <h3 class="chart-title">Ranking de Incidencia</h3>
+              <p class="chart-subtitle">Top 5 distritos con mayor carga</p>
+            </div>
+            <div class="flex items-center justify-center h-full text-gray-400">
+              <p class="text-sm">Selecciona un diagnóstico y presiona "Generar Reporte</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+</div>

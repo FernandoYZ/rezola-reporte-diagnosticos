@@ -1,0 +1,91 @@
+<main class="max-w-7xl mx-auto">
+    <div class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen" 
+    x-data="{
+      fechaInicio: '<%= it.periodoInicial.fechaInicio %>',
+      fechaFin: '<%= it.periodoInicial.fechaFin %>',
+      dateLabel: '',
+      init() {
+        this.updateDateLabel();
+        this.$watch('fechaInicio', () => this.updateDateLabel());
+        this.$watch('fechaFin', () => this.updateDateLabel());
+      },
+      updateDateLabel() {
+        if (this.fechaInicio && this.fechaFin) {
+          const start = new Date(this.fechaInicio + 'T00:00:00');
+          const end = new Date(this.fechaFin + 'T00:00:00');
+          const options = { year: 'numeric', month: 'short', day: 'numeric' };
+          this.dateLabel = `${start.toLocaleDateString('es-ES', options)} - ${end.toLocaleDateString('es-ES', options)}`;
+        } else {
+          this.dateLabel = 'Seleccione un período';
+        }
+      },
+      cargarTablas() {
+        const params = new URLSearchParams({
+          fechaInicio: this.fechaInicio,
+          fechaFin: this.fechaFin
+        });
+        htmx.ajax('GET', `/api/datos-tablas?${params.toString()}`, '#tablas-container');
+      },
+      exportarExcel() {
+        const params = new URLSearchParams({
+          fechaInicio: this.fechaInicio,
+          fechaFin: this.fechaFin
+        });
+        window.location.href = `/api/exportar?${params.toString()}`;
+      }
+    }">
+    
+      <!-- MAIN CONTENT -->
+      <section class="relative z-10">
+        <!-- Padding responsive para el contenido -->
+        <div class="p-4 lg:p-8">
+    
+          <!-- Header de la página -->
+          <%~ include('../components/header/index.eta', it) %>
+    
+          <!-- Filtros -->
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200/80 my-6">
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+              <div class="w-full sm:w-auto">
+                <label for="fechaInicio" class="text-xs font-semibold text-slate-600 mb-1 block">Fecha Inicio</label>
+                <input type="date" id="fechaInicio" name="fechaInicio" x-model="fechaInicio" class="w-full bg-slate-50 border border-slate-300 text-sm font-medium text-slate-700 rounded-lg py-2 px-3 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+              </div>
+              <div class="w-full sm:w-auto">
+                <label for="fechaFin" class="text-xs font-semibold text-slate-600 mb-1 block">Fecha Fin</label>
+                <input type="date" id="fechaFin" name="fechaFin" x-model="fechaFin" class="w-full bg-slate-50 border border-slate-300 text-sm font-medium text-slate-700 rounded-lg py-2 px-3 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+              </div>
+              <div class="pt-5 w-full sm:w-auto">
+                <button 
+                  type="button" 
+                  @click="cargarTablas()" 
+                  class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-lg text-sm flex justify-center items-center gap-2 w-full"
+                  id="btn-cargar"
+                >
+                  <span class="htmx-indicator">
+                    <%~ icon('refresh_cw', { class: 'w-4 h-4 animate-spin' }) %>
+                  </span>
+                  <span>Cargar Reportes</span>
+                </button>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Contenedor para las tablas -->
+          <div id="tablas-container" 
+               hx-get="/api/datos-tablas?<%= new URLSearchParams({ fechaInicio: it.periodoInicial.fechaInicio, fechaFin: it.periodoInicial.fechaFin }).toString() %>" 
+               hx-trigger="load" 
+               hx-indicator="#btn-cargar .htmx-indicator">
+            <!-- Las tablas se cargarán aquí desde el servidor -->
+            <div class="flex items-center justify-center h-96 text-slate-400">
+              <div class="text-center">
+                <%~ icon('refresh_cw', { class: 'w-8 h-8 animate-spin mx-auto mb-4' }) %>
+                <p class="text-sm">Cargando reportes...</p>
+              </div>
+            </div>
+          </div>
+    
+        </div>
+      </section>
+    
+    </div>
+</main>

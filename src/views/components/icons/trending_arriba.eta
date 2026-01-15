@@ -1,0 +1,16 @@
+<svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width="<%= it.size ?? 24 %>"
+    height="<%= it.size ?? 24 %>"
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    stroke-width="<%= it.strokeWidth ?? 2 %>"
+    stroke-linecap="round" 
+    stroke-linejoin="round" 
+    class="lucide lucide-trending-up-icon lucide-trending-up <%= it.class ?? 'w-6 h-6' %>"
+    aria-label="<%= it.ariaLabel ?? 'Trending up' %>"
+>
+    <path d="M16 7h6v6"/>
+    <path d="m22 7-8.5 8.5-5-5L2 17"/>
+</svg>

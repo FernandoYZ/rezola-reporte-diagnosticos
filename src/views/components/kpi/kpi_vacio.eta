@@ -1,0 +1,62 @@
+<!-- KPIs de resumen - Estado vacío -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+
+  <!-- Pacientes Únicos -->
+  <%~ include('./card.eta', {
+    titulo: 'Pacientes únicos',
+    valor: null,
+    unidad: 'pacientes',
+    icono: 'usuarios',
+    bgColorValue: '#ecfeff',
+    iconColorValue: '#0891b2',
+    borderColorValue: '#dbeafe',
+    hoverColorValue: '#06b6d4',
+    hoverBgValue: '#06b6d4',
+    icon: it.icon
+  }) %>
+
+  <!-- Total Atenciones -->
+  <%~ include('./card.eta', {
+    titulo: 'Total atenciones',
+    valor: null,
+    unidad: 'atenciones',
+    icono: 'portapapeles_check',
+    bgColorValue: '#ecfdf5',
+    iconColorValue: '#10b981',
+    borderColorValue: '#d1fae5',
+    hoverColorValue: '#6ee7b7',
+    hoverBgValue: '#34d399',
+    icon: it.icon
+  }) %>
+
+  <!-- Ratio Incidencia -->
+  <%~ include('./card.eta', {
+    titulo: 'Ratio incidencia',
+    valor: null,
+    unidad: '%',
+    descripcion: 'Promedio de atenciones por paciente',
+    icono: 'activity',
+    bgColorValue: '#fffbeb',
+    iconColorValue: '#d97706',
+    borderColorValue: '#fef3c7',
+    hoverColorValue: '#fcd34d',
+    hoverBgValue: '#fbbf24',
+    icon: it.icon
+  }) %>
+
+  <!-- Distritos Afectados -->
+  <%~ include('./card.eta', {
+    titulo: 'Distritos afectados',
+    valor: null,
+    unidad: 'distritos',
+    icono: 'mapa_pin',
+    bgColorValue: '#fff1f2',
+    iconColorValue: '#e11d48',
+    borderColorValue: '#ffe4e6',
+    hoverColorValue: '#fda4af',
+    hoverBgValue: '#e11d48',
+    icon: it.icon
+  }) %>
+
+</div>
+

@@ -1,0 +1,38 @@
+<% if (it.datos.tablaFebres.length > 0) { %>
+  <table class="w-full text-xs">
+    <thead class="bg-slate-50 sticky top-0 z-10">
+      <tr>
+        <th class="text-left p-2 font-semibold text-slate-600">CIE-10</th>
+        <th class="text-left p-2 font-semibold text-slate-600">Diagnóstico</th>
+        <th class="text-left p-2 font-semibold text-slate-600">Atención</th>
+        <th class="text-left p-2 font-semibold text-slate-600">Fecha</th>
+        <th class="text-left p-2 font-semibold text-slate-600">Paciente</th>
+        <th class="text-left p-2 font-semibold text-slate-600">Edad</th>
+        <th class="text-left p-2 font-semibold text-slate-600">Documento</th>
+        <th class="text-left p-2 font-semibold text-slate-600">Domicilio</th>
+        <th class="text-left p-2 font-semibold text-slate-600">Distrito</th>
+        <th class="text-left p-2 font-semibold text-slate-600">Celular</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% it.datos.tablaFebres.forEach(function(row) { %>
+        <tr class="border-t border-slate-100 hover:bg-red-50/30">
+          <td class="p-2 font-mono text-blue-600"><%= row.CodigoCIE10 %></td>
+          <td class="p-2 text-slate-700"><%= row.Descripcion %></td>
+          <td class="p-2 text-slate-600"><%= row.IdAtencion %></td>
+          <td class="p-2 text-slate-600 whitespace-nowrap"><%= row.FechaFormateada || '-' %></td>
+          <td class="p-2 font-semibold text-slate-800"><%= row.paciente %></td>
+          <td class="p-2 text-slate-600"><%= row.Edad %></td>
+          <td class="p-2 text-slate-600"><%= row.NroDocumento || '-' %></td>
+          <td class="p-2 text-slate-600"><%= row.domicilio || '-' %></td>
+          <td class="p-2 text-slate-600"><%= row.distrito || '-' %></td>
+          <td class="p-2 text-slate-600"><%= row.Celular || '-' %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } else { %>
+  <div class="flex items-center justify-center h-full text-slate-400 p-8">
+    <p class="text-center">No hay registros de cuadros febriles que coincidan con tu búsqueda</p>
+  </div>
+<% } %>
