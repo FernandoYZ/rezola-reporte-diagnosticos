@@ -1,4 +1,7 @@
 // src/queries/diagnosticos.js
+import mssql from 'mssql'
+import { obtenerPool } from '../config/database.js'
+
 export const BUSCAR_CODIGO_DIAGNOSTICO = `
   -- DECLARE @buscar   VARCHAR(10) = '';
   -- DECLARE @cantidad INT = 15;
@@ -367,6 +370,9 @@ export const CANTIDADES_ATENCIONES_POR_ANIO = `
 // ==================== //
  
 export const TABLA_FEBRILES = `
+  DECLARE @localInicio DATE = @FechaInicio;
+  DECLARE @localFin DATE = @FechaFin;
+
   select distinct
     d.CodigoCIE10,
     d.Descripcion,
@@ -386,12 +392,15 @@ export const TABLA_FEBRILES = `
   inner join Pacientes p on p.IdPaciente=a.IdPaciente
   left join Distritos di on di.IdDistrito=p.IdDistritoProcedencia
   left join TiposEdad td on td.IdTipoEdad=a.IdTipoEdad
-  where a.FechaIngreso between @FechaInicio and @FechaFin and
+  where a.FechaIngreso between @localInicio and @localFin and
   tp.IdTipoServicio in (2)
   and d.CodigoCIE10 like  '%r50%'
 `;
 
 export const TABLA_IRAS = `
+  DECLARE @localInicio DATE = @FechaInicio;
+  DECLARE @localFin DATE = @FechaFin;
+
   select distinct
     d.Descripcion,
     a.IdAtencion,
@@ -409,7 +418,7 @@ export const TABLA_IRAS = `
   inner join Pacientes p on p.IdPaciente=a.IdPaciente
   left join Distritos di on di.IdDistrito=p.IdDistritoProcedencia
   left join TiposEdad td on td.IdTipoEdad=a.IdTipoEdad
-  where a.FechaIngreso between @FechaInicio and @FechaFin and
+  where a.FechaIngreso between @localInicio and @localFin and
   tp.IdTipoServicio in (2)
   and d.CodigoCIE10 like '%j%'
   --and a.IdTipoEdad=1
@@ -417,6 +426,9 @@ export const TABLA_IRAS = `
 `;
 
 export const TABLA_EDAS = `
+  DECLARE @localInicio DATE = @FechaInicio;
+  DECLARE @localFin DATE = @FechaFin;
+
   select distinct
     d.CodigoCIE10,
     d.Descripcion,
@@ -435,12 +447,31 @@ export const TABLA_EDAS = `
   inner join Pacientes p on p.IdPaciente=a.IdPaciente
   left join Distritos di on di.IdDistrito=p.IdDistritoProcedencia
   left join TiposEdad td on td.IdTipoEdad=a.IdTipoEdad
-  where a.FechaIngreso between @FechaInicio and @FechaFin and
+  where a.FechaIngreso between @localInicio and @localFin and
   tp.IdTipoServicio in (2)
   and d.CodigoCIE10 like  '%a09%'
 `;
 
+export const TABLA_TOTAL_ATENCIONES = `
+  DECLARE @localInicio DATE = @FechaInicio;
+  DECLARE @localFin DATE = @FechaFin;
+  select  
+    a.FechaIngreso, 
+    count (DISTINCT a.IdAtencion) Total 
+  from AtencionesDiagnosticos at
+  inner join Atenciones a on a.IdAtencion=at.IdAtencion
+  inner join Diagnosticos d on d.IdDiagnostico=at.IdDiagnostico
+  inner join TiposServicio tp on tp.IdTipoServicio=a.IdTipoServicio 
+  inner join Pacientes p on p.IdPaciente=a.IdPaciente
+  where a.FechaIngreso between @localInicio and @localFin and 
+  tp.IdTipoServicio in (2) 
+  group by a.FechaIngreso
+`;
+
 export const TABLA_INFORMACION_PERSONAL = `
+  DECLARE @localInicio DATE = @FechaInicio;
+  DECLARE @localFin DATE = @FechaFin;
+  
   select distinct
     d.CodigoCIE10,
     d.Descripcion,
@@ -460,7 +491,7 @@ export const TABLA_INFORMACION_PERSONAL = `
   inner join Pacientes p on p.IdPaciente=a.IdPaciente
   left join Distritos di on di.IdDistrito=p.IdDistritoProcedencia
   left join TiposEdad td on td.IdTipoEdad=a.IdTipoEdad
-  where a.FechaIngreso between @FechaInicio and @FechaFin and
+  where a.FechaIngreso between @localInicio and @localFin and
   tp.IdTipoServicio in (2)
   and at.IdDiagnostico in (1,2,3,35,79,97,99,102,111,112,113,114,115,116,135,136,137,160,162,163,
   164,165,166,167,168,169,170,171,172,174,206,207,306,323,324,325,333,365,402,403,404,405,406,414,416,
@@ -474,3 +505,40 @@ export const TABLA_INFORMACION_PERSONAL = `
   50993,13860,13861,13862,13863,13864,13865,13866,13867,13868,13869,13894,13100,13101,13102,13103,13104,13105,13106,
   13107,13108)
 `;
+
+
+// función para ejecutarQuery solo para 4 parámetros (Codigo, FechaInicio, FechaFin, QUERY)
+export async function ejecutarQuery(Codigo, FechaInicio, FechaFin, query) {
+  const pool = obtenerPool();
+  const resultado = await pool
+    .request()
+    .input("Codigo", mssql.VarChar(20), Codigo)
+    .input("FechaInicio", mssql.DateTime, FechaInicio)
+    .input("FechaFin", mssql.DateTime, FechaFin)
+    .query(query);
+
+  return resultado.recordset;
+}
+
+export async function ejecutarFecha(FechaInicio, FechaFin, query) {
+  const pool = obtenerPool();
+  const resultado = await pool
+    .request()
+    .input("FechaInicio", mssql.DateTime, FechaInicio)
+    .input("FechaFin", mssql.DateTime, FechaFin)
+    .query(query);
+
+  return resultado.recordset;
+}
+
+export async function ejecutarEncontrarCodigo(buscar, pagina = 1, cantidad = 15) {
+  const pool = obtenerPool()
+  const result = await pool
+    .request()
+    .input("buscar", mssql.VarChar(10), buscar || "")
+    .input("pagina", mssql.Int, pagina)
+    .input("cantidad", mssql.Int, cantidad)
+    .query(BUSCAR_CODIGO_DIAGNOSTICO);
+
+  return result.recordset;
+}
