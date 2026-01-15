@@ -1,8 +1,11 @@
+// Simple global state store
+window.reporteState = {
+  codigoDiagnostico: ''
+};
+
 import { autocomplete } from './components/autocomplete.js';
 import { dashboardApp } from './components/dashboard-app.js';
 import { reportesApp } from './components/reportes-app.js';
-
-// Importar funciones de gráficos (ApexCharts ya está disponible desde CDN)
 import {
   renderTendenciaChart,
   renderFinanciamientoChart,
