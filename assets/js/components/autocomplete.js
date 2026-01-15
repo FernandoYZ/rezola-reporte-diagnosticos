@@ -15,6 +15,13 @@ export function autocomplete() {
     showResults: false,
     resultados: [],
 
+    init() {
+      // Usar $watch para observar cambios en 'query' y notificar al estado global
+      this.$watch('query', value => {
+        window.reporteState.codigoDiagnostico = value;
+      });
+    },
+
     async buscar() {
       if (this.query.length < 1) {
         this.resultados = [];
